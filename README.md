@@ -201,8 +201,8 @@ curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/shakespeare/
 
 To run butler on a docker container you need to adjust config/env.json:
 
-    - Edit mongo  configuration, url and options
-    - Edit senders configurations
+- Edit mongo configuration url and options
+- Edit senders configurations
 
 Than just run:
 
