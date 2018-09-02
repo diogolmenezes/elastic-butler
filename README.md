@@ -62,7 +62,7 @@ A recipe describe the operation of monitoring. This is how a recipe looks like:
 - **application**: Monitored application name
 - **elasticsearch**: Elastic-search url with port information (Ex: localhost:9200)
 - **search**: This is the object to specify the search
-- **search.index**: Search index name. If you set dateOnIndex at config/env.json, butler will add the current date (-YYYY-MM-DD) at the end of index name.
+- **search.index**: Search index name. If you set dateOnIndex at **config/env.json**, butler will add the current date (-YYYY-MM-DD) at the end of index name.
 - **search.query**: Elastic search query. (Ex.: code:\"500\" && \"EXTERNAL API ERROR\")
 - **search.limit**: Limit of hits until action be executed
 - **search.period**: Period in minutes that the occurrence will be searched. (Ex: 20 m) "At last 20 minutes"
@@ -199,7 +199,7 @@ curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/shakespeare/
 
 ## Docker
 
-To run butler on a docker container you need to adjust config/env.json:
+To run butler on a docker container you need to adjust **config/env.json**:
 
 - Edit mongo configuration url and options
 - Edit senders configurations
