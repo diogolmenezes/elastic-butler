@@ -1,0 +1,10 @@
+.vscode/
+git.properties
+node_modules/
+.nyc_output/
+.npm
+_sandbox/data/mongo/*
+output/report.txt
+test/reports/
+package-lock.json
+*.sample*

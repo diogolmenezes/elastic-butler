@@ -1,0 +1,13 @@
+version: '2'
+services:
+  butler:
+    container_name: butler
+    build: 
+      context: ../
+      dockerfile: _docker/Dockerfile
+    image: butler
+    restart: always
+    mem_limit: 512m
+    command: node --max_old_space_size=300 index.js
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
