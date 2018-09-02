@@ -66,7 +66,7 @@ A recipe describe the operation of monitoring. This is how a recipe looks like:
 - **search.query**: Elastic search query. (Ex.: code:\"500\" && \"EXTERNAL API ERROR\")
 - **search.limit**: Limit of hits until action be executed
 - **search.period**: Period in minutes that the occurrence will be searched. (Ex: 20 m) "At last 20 minutes"
-- **action**: This is the object to specify the action. For default butler has 2 action types ([gmail](#gmail-recipe-sample) and [twiliosms](#twiliosms-recipe-sample)). Butler will search for this type at worker/senders folder. You can create your own sender.
+- **action**: This is the object to specify the action. For default butler has 2 action types ([gmail](#gmail-recipe-sample) and [twiliosms](#twiliosms-recipe-sample)). Butler will search for this type at **worker/senders** folder. You can create your own sender.
 
 ### Gmail action type
 
@@ -228,7 +228,7 @@ sudo ./down.sh
 
 ## Creating senders
 
-You can create your own butler sender. To do this you have to create a sender class at worker/senders folder with the name of your type:
+You can create your own butler sender. To do this you have to create a sender class at **worker/senders** folder with the name of your type:
 
 ```javascript
 // worker/senders/sms.js
