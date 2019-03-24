@@ -37,7 +37,7 @@ if(config.store.type === "elasticsearch") {
       });
 
 } else if (config.store.type === "mongo") {
-    database.connect(config.db);
+    database.connect(config.store);
     var recipe = new Recipe(recipeObj);
     recipe.save();
 }
