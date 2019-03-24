@@ -65,10 +65,9 @@ class ExecutionService {
 
 
         if(config.store.type === "elasticsearch") {
-            await this.client.create({
+            await this.client.index({
                 index: config.store.executionIndex,
                 type: 'execution',
-                id: '1',
                 body: executionObj
             });
 

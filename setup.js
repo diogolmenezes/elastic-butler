@@ -30,10 +30,9 @@ if(config.store.type === "elasticsearch") {
         host: config.store.uri
     });
 
-    client.create({
+    client.index({
         index: config.store.recipeIndex,
         type: 'recipe',
-        id: '1',
         body: recipeObj
       });
 
