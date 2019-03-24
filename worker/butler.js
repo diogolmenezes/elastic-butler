@@ -59,8 +59,12 @@ class Butler {
         console.log(`Butler => Looking for recipes...`);
 
         this.recipeService.findActive()
-            .then(recipes => {                
-                return recipes.map(recipe => recipe.toObject());
+            .then(recipes => {
+                if(this.config.store.type === "mongo") {
+                    return recipes.map(recipe => recipe.toObject());
+                } else {
+                    return recipes;
+                }
             })
             .then(recipes => {
 

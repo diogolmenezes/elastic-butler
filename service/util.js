@@ -21,6 +21,16 @@ class Util {
         if (interval === 'week')
             return { initialDate: this.moment().startOf('week'), finalDate: this.moment().endOf('week') };
     };
+
+    getSourceArrayFromElasticHits(hits) {
+        let resultArray = [];
+
+        hits.forEach((hit) => {
+            resultArray.push(hit._source);
+        });
+        
+        return resultArray;
+    }
 };
 
 module.exports = new Util();
