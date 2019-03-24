@@ -9,7 +9,7 @@ With butler you get notified if your data has a pattern set by you.
 
 You are free to create your own [recipes](#recipes) and [notification types](#creating-senders).
 
-## Get Start
+## Get Started
 
 In addition to elastic search, it will be necessary a mongo database for running Buttler. The mongo databese will store all your monitoring recipes.
 
@@ -130,6 +130,50 @@ This action is part of butler default solution, and uses a twilio account to sen
         "query" : "\"with love\"",
         "limit" : "10",
         "period" : "6000 m"
+    }
+}
+```
+
+### Slack Action Type
+This action is part of butler default solution, and uses a slack webhook to send a message.
+
+This action allows you to specify multiple slack webhooks to alert different rooms depending on your recipe.
+
+#### Setup
+1. Go to https://{yourteam}.slack.com/apps
+1. Install Incoming Webhooks.
+1. Generate a new webhook for your recipe.
+1. Copy the url and include it in the recipe.
+
+#### Action Attributes
+
+- **action.type**: slack
+- **action.webhookUrl**: https://hooks.slack.com/services/...
+- **action.username**: Elastic Butler
+- **action.icon_emoji**: ghost
+- **action.message**: Message body. Tags #hits#, #application# and #recipe# will be replaced with recipe data
+
+#### Slack recipe sample
+```json
+{
+    "name" : "test-recipe",
+    "application" : "test",
+    "active" : true,
+    "elasticsearch" : "http://localhost:9200",
+    "kibana" : "http://localhost:5601",
+    "interval" : 1,
+    "action" : {
+        "type" : "slack",
+        "message": "[#application#] recieved [#hits#] hits for [#recipe#]",
+        "webhookUrl": "https://hooks.slack.com/services/...",
+        "username": "Elastic Butler",
+        "icon_emoji": "ghost"
+    },
+    "search" : {
+        "index" : "shakespeare",
+        "query" : "\"with love\"",
+        "limit" : "0",
+        "period" : "10 m"
     }
 }
 ```
