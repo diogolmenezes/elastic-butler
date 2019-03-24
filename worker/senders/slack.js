@@ -6,7 +6,7 @@ class SlackSender {
     send(recipe, searchResult) {
         console.log(`Butler => Sending slack webhook for recipe [${recipe.application}] [${recipe.name}]`);
         let action = recipe.action;
-        let message = this._getInfo(recipe.action.message, recipe, searchResult);
+        let message = this._getInfo(action.message, action.detailField, recipe, searchResult);
 
         return request({
             method: 'POST',
@@ -15,16 +15,17 @@ class SlackSender {
             body: {
                 text: message,
                 username: action.username,
-                icon_emoji: `:${action.icon_emoji}:`
+                icon_emoji: `:${action.iconEmoji}:`
             }
         });
     };
 
-    _getInfo(text, recipe, searchResult) {
+    _getInfo(text, detailField, recipe, searchResult) {
         return text
                 .replace('#application#', recipe.application)
                 .replace('#recipe#', recipe.name)
-                .replace('#hits#', searchResult.hits.total);
+                .replace('#hits#', searchResult.hits.total)
+                .replace('#detail#', searchResult.hits.hits[0]._source[detailField]);
     }
 };
 

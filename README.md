@@ -150,8 +150,9 @@ This action allows you to specify multiple slack webhooks to alert different roo
 - **action.type**: slack
 - **action.webhookUrl**: https://hooks.slack.com/services/...
 - **action.username**: Elastic Butler
-- **action.icon_emoji**: ghost
-- **action.message**: Message body. Tags #hits#, #application# and #recipe# will be replaced with recipe data
+- **action.iconEmoji**: ghost
+- **action.detailField**: text_entry
+- **action.message**: Message body. Tags #hits#, #application#, #recipe#, and #detail# will be replaced with recipe/hit data
 
 #### Slack recipe sample
 ```json
@@ -164,10 +165,11 @@ This action allows you to specify multiple slack webhooks to alert different roo
     "interval" : 1,
     "action" : {
         "type" : "slack",
-        "message": "[#application#] recieved [#hits#] hits for [#recipe#]",
+        "message": "[#application#] recieved [#hits#] hits for [#recipe#] \n\n #detail#",
         "webhookUrl": "https://hooks.slack.com/services/...",
         "username": "Elastic Butler",
-        "icon_emoji": "ghost"
+        "iconEmoji": "ghost",
+        "detailField": "text_entry"
     },
     "search" : {
         "index" : "shakespeare",
