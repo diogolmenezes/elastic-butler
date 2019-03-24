@@ -46,7 +46,10 @@ For mongodb data store set your configuration to something like this:
 ```
 
 ### Elasticsearch
-You can also store your configuration right in elasticsearch! The configuration might look something like this:
+You can also store your configuration right in elasticsearch!
+This means you can build dashboards and visualizations about your alerts!
+You could even alert on your alerts if you wanted to!
+ The configuration might look something like this:
 ```json
     "store": {
         "type": "elasticsearch",
