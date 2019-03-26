@@ -61,9 +61,9 @@ A recipe describe the operation of monitoring. This is how a recipe looks like:
 }
 ```
 
-To create you first recipe just PUT it to the store.recipeIndex ( elastic_butler_recipe by default )
+To create your first recipe PUT it to the store.recipeIndex ( elastic_butler_recipe by default )
 
-```elasticsearch
+```json
 PUT http://localhost:9200/elastic_butler_recipe
 
 {
