@@ -27,6 +27,38 @@ Butler uses the @timestamp field to do the "period" filter. [Make sure your inde
 ![Execution](https://github.com/diogolmenezes/elastic-butler/blob/master/_doc/execution.png)
 ![Email](https://github.com/diogolmenezes/elastic-butler/blob/master/_doc/email-2.png)
 
+## Configuration
+A file **config/env.json** exists to allow you to provide configuration for this application. This includes many things like sender configuration and data
+store configuration.
+
+There are 2 main types of data store configuration available. The data store stores your recipes and execution records.
+
+### Mongodb
+For mongodb data store set your configuration to something like this:
+```json
+    "store": {
+        "type": "mongo",
+        "uri": "mongodb://localhost:27017/elastic-butler",
+        "options": {
+            "useMongoClient": true
+        }
+    },
+```
+
+### Elasticsearch
+You can also store your configuration right in elasticsearch!
+This means you can build dashboards and visualizations about your alerts!
+You could even alert on your alerts if you wanted to!
+ The configuration might look something like this:
+```json
+    "store": {
+        "type": "elasticsearch",
+        "uri": "http://localhost:9200",
+        "recipeIndex": "elastic_butler_recipe",
+        "executionIndex": "elastic_butler_execution"
+    },
+```
+
 ## Recipes
 
 Butler will search for recipes at your mongo database.

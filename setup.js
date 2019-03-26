@@ -1,10 +1,10 @@
+const elasticsearch = require('elasticsearch')
+
 const config = require('./config');
 const database = require('./config/database');
 const Recipe = require('./model/recipe');
 
-database.connect(config.db);
-
-var recipe = new Recipe({
+let recipeObj = {
     name: 'test-recipe',
     application: 'test',
     active: true,
@@ -23,6 +23,21 @@ var recipe = new Recipe({
         subject: '[#hits#] hits at [#application# #recipe#]',
         body: '<p>Your recipe results:</p> #detail#'
     }
-});
+};
 
-recipe.save();
+if(config.store.type === "elasticsearch") {
+    let client = new elasticsearch.Client({
+        host: config.store.uri
+    });
+
+    client.index({
+        index: config.store.recipeIndex,
+        type: 'recipe',
+        body: recipeObj
+      });
+
+} else if (config.store.type === "mongo") {
+    database.connect(config.store);
+    var recipe = new Recipe(recipeObj);
+    recipe.save();
+}
