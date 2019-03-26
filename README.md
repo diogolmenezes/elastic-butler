@@ -11,11 +11,12 @@ You are free to create your own [recipes](#recipes) and [notification types](#cr
 
 ## Get Started
 
-In addition to elastic search, it will be necessary a mongo database for running Buttler. The mongo databese will store all your monitoring recipes.
-
-If you already have a running mongo and elastic search, just set up at **config/env.json** file. *If you don't have this yet, you can use our test [sandbox](#sandbox))*
+Elastic butler will store the [recipes](#recipes) and the execution result at a Elastic Search index, so before start check the configuration file
+ **config/env.json** and set up you store configurations.
 
 Create your [recipes](#recipes) than start butler.
+
+You can also use the [sandbox](#sandbox) to do your first test, it will provide to you a elastic search and kibana instances running on docker.
 
 ```bash
 npm start
@@ -23,45 +24,17 @@ npm start
 
 Butler uses the @timestamp field to do the "period" filter. [Make sure your index has this field](https://www.elastic.co/guide/en/elasticsearch/reference/5.0/breaking_50_mapping_changes.html#_literal__ttl_literal_and_literal__timestamp_literal_cannot_be_created).
 
-
 ![Execution](https://github.com/diogolmenezes/elastic-butler/blob/master/_doc/execution.png)
 ![Email](https://github.com/diogolmenezes/elastic-butler/blob/master/_doc/email-2.png)
 
 ## Configuration
+
 A file **config/env.json** exists to allow you to provide configuration for this application. This includes many things like sender configuration and data
 store configuration.
 
-There are 2 main types of data store configuration available. The data store stores your recipes and execution records.
-
-### Mongodb
-For mongodb data store set your configuration to something like this:
-```json
-    "store": {
-        "type": "mongo",
-        "uri": "mongodb://localhost:27017/elastic-butler",
-        "options": {
-            "useMongoClient": true
-        }
-    },
-```
-
-### Elasticsearch
-You can also store your configuration right in elasticsearch!
-This means you can build dashboards and visualizations about your alerts!
-You could even alert on your alerts if you wanted to!
- The configuration might look something like this:
-```json
-    "store": {
-        "type": "elasticsearch",
-        "uri": "http://localhost:9200",
-        "recipeIndex": "elastic_butler_recipe",
-        "executionIndex": "elastic_butler_execution"
-    },
-```
+Elastic butler will store the [recipes](#recipes) and the execution result at a Elastic Search index this means you can build dashboards and visualizations about your alerts! You could even alert on your alerts if you wanted to. 
 
 ## Recipes
-
-Butler will search for recipes at your mongo database.
 
 A recipe describe the operation of monitoring. This is how a recipe looks like:
 
@@ -87,6 +60,37 @@ A recipe describe the operation of monitoring. This is how a recipe looks like:
     }
 }
 ```
+
+To create you first recipe just PUT it to the store.recipeIndex ( elastic_butler_recipe by default )
+
+```elasticsearch
+PUT http://localhost:9200/elastic_butler_recipe
+
+{
+    "name": "test-recipe",
+    "application": "test",
+    "active": true,
+    "elasticsearch": "http://localhost:9200",
+    "kibana": "http://localhost:5601",
+    "interval": 1,
+    "search": {
+        "index": "shakespeare",
+        "query": "with love",
+        "limit": 10,
+        "period": "10 m"
+    },
+    "action": {
+        "type": "gmail",
+        "to": "diogolmenezes@gmail.com",
+        "subject": "[#hits#] hits at [#application# #recipe#]",
+        "body": "<p>Your recipe results:</p> #detail#"
+    }
+}
+```
+
+or just execute the setup:
+
+`node setup.js`
 
 ### Recipe description:
 
@@ -166,12 +170,14 @@ This action is part of butler default solution, and uses a twilio account to sen
 }
 ```
 
-### Slack Action Type
+### Slack action type
+
 This action is part of butler default solution, and uses a slack webhook to send a message.
 
 This action allows you to specify multiple slack webhooks to alert different rooms depending on your recipe.
 
 #### Setup
+
 1. Go to https://{yourteam}.slack.com/apps
 1. Install Incoming Webhooks.
 1. Generate a new webhook for your recipe.
@@ -187,6 +193,7 @@ This action allows you to specify multiple slack webhooks to alert different roo
 - **action.message**: Message body. Tags #hits#, #application#, #recipe#, and #detail# will be replaced with recipe/hit data
 
 #### Slack recipe sample
+
 ```json
 {
     "name" : "test-recipe",
@@ -222,7 +229,7 @@ cd _sandbox
 sudo ./sandbox.sh up -d
 ```
 
-Our sandbox will use docker-compose to run mongo, elastic-search and kibana containers.
+Our sandbox will use docker-compose to run elastic-search and kibana containers.
 
 After containers are running, you should need import some [sample data](https://www.elastic.co/guide/en/kibana/current/tutorial-load-dataset.html):
 
@@ -279,7 +286,7 @@ curl -H 'Content-Type: application/x-ndjson' -XPOST 'localhost:9200/shakespeare/
 
 To run butler on a docker container you need to adjust **config/env.json**:
 
-- Edit mongo configuration url and options
+- Edit store configuration url and options
 - Edit senders configurations
 
 Than just run:
@@ -355,14 +362,4 @@ Than you can create a recipe using your new sender:
         "body": "#application# #recipe# => #hits# hits"
     }
 }
-```
-
-## TTL
-
-Butler stores all execution results at mongo "executions" collection.
-
-If you want these executions to expire so that your database does not get too full, you have to set the TTL.
-
-```javascript
-db.getCollection('executions').createIndex( { "created_at": 1 }, { expireAfterSeconds: 10800 } )
 ```

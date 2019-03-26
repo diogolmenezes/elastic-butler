@@ -1,25 +1,24 @@
 {
   "name": "elastic-butler",
   "author": "Diogo Menezes <diogolmenezes@gmail.com>",
-  "version": "1.0.46",
+  "version": "2.0.0",
   "description": "Elastic butler is a open source alternative to Elastic Stack Alerting tool",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "clear; node index.js",
     "test": "nyc --reporter=html --reporter=lcov --reporter=text-lcov --reporter=text --report-dir=test/reports mocha -u bdd ./test/**/*.test.js --timeout 12000",
     "integration": "echo \"Error: no test specified\""
   },
   "license": "GPLv3",
   "dependencies": {
-    "elasticsearch": "^13.3.1",
-    "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
-    "mongoose": "^4.12.0",
-    "nodemailer": "^4.1.1",
+    "elasticsearch": "^15.4.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.23",
+    "nodemailer": "^6.0.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "twilio": "^3.19.2"
+    "twilio": "^3.29.2"
   },
   "devDependencies": {
     "mocha": "^4.0.0",

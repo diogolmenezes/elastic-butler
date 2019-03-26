@@ -2,60 +2,20 @@ const elasticsearch = require('elasticsearch');
 const config = require('../config');
 const util = require('./util');
 
+// this class is able to find and save items at execution elastic search index
 class ExecutionService {
     constructor() {
-        this.storeType = config.store.type;
-        this.executionIndex = config.store.executionIndex;
-        this.model = require('../model/execution');
+        this.index = config.store.executionIndex;
+        this.client = new elasticsearch.Client({
+            host: config.store.uri
+        });
+    };   
 
-        if(this.storeType === "elasticsearch") {
-            this.client = new elasticsearch.Client({
-                host: config.store.uri
-            });
-        }
-    };
-
-    async find(query) {
-        if(this.storeType === "elasticsearch") {
-            await this.client.search({
-                index: index,
-                body: query
-            })
-            .then((searchResult) => {
-                return util.getSourceArrayFromElasticHits(searchResult.hits.hits);
-            });
-        } else if (this.storeType === "mongo") {
-            return this.model.find(query);
-        }
-        return null;
-    };
-
-    async findLast() {
-        if(this.storeType === "elasticsearch") {
-            await client.search({
-                index: this.recipeIndex,
-                body: {
-                    sort: [{
-                        "created_at": {
-                            order: "desc"
-                        }
-                    }],
-                    limit: 500
-                }
-            })
-            .then((searchResult) => {
-                return util.getSourceArrayFromElasticHits(searchResult.hits.hits);
-            });
-        } else if (this.storeType === "mongo") {
-            return this.model.find({}).sort({ created_at: -1 }).limit(500);
-        }
-
-        return null;
-    };
-
+    // save a new execution at axecution index
     async save(recipe, hits, firedAction, result) {
         console.log(`Butler => Saving process result for recipe [${recipe.application}] [${recipe.name}]`);
-        let executionObj = {
+
+        let execution = {
             recipe: recipe,
             hits: hits,
             firedAction: firedAction,
@@ -63,18 +23,11 @@ class ExecutionService {
             created_at: new Date()
         }
 
-
-        if(config.store.type === "elasticsearch") {
-            await this.client.index({
-                index: config.store.executionIndex,
-                type: 'execution',
-                body: executionObj
-            });
-
-        } else if (config.store.type === "mongo") {
-            let execution = new this.model(executionObj);
-            return execution.save();
-        }
+        await this.client.index({
+            index: this.index,
+            type: 'execution',
+            body: execution
+        });
     };
 };
 

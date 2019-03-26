@@ -2,42 +2,19 @@ const elasticsearch = require('elasticsearch');
 const config = require('../config');
 const util = require('./util');
 
+// this class is able to find and save items at recipe elastic search index
 class RecipeService {
     constructor() {
-        this.storeType = config.store.type;
-        this.recipeIndex = config.store.recipeIndex;
-        this.model = require('../model/recipe');
-
-        if(this.storeType === "elasticsearch") {
-            this.client = new elasticsearch.Client({
-                host: config.store.uri
-            });
-        }
+        this.index = config.store.recipeIndex;
+        this.client = new elasticsearch.Client({
+            host: config.store.uri
+        });
     };
 
-    async find(query) {
-
-        if(this.storeType === "elasticsearch") {
-            await this.client.search({
-                index: index,
-                body: query
-            })
-            .then((searchResult) => {
-                return util.getSourceArrayFromElasticHits(searchResult.hits.hits);
-            });
-        } else if (this.storeType === "mongo") {
-            return this.model.find(query);
-        }
-
-        return null;
-
-    };
-
+    // find active recipes in recipe index
     async findActive() {
-        if(this.storeType === "elasticsearch") {
-            let hits;
-            await this.client.search({
-                index: this.recipeIndex,
+        const hits = await this.client.search({
+                index: this.index,
                 body: {
                     query: {
                         match: {
@@ -46,15 +23,18 @@ class RecipeService {
                     }
                 }
             })
-            .then((searchResult) => {
-                hits = util.getSourceArrayFromElasticHits(searchResult.hits.hits);
-            });
-            return hits;
-        } else if (this.storeType === "mongo") {
-            return this.model.find({ active: true });
-        }
+            .then((searchResult) => util.getSourceArrayFromElasticHits(searchResult.hits.hits));
 
-        return null;
+        return hits;
+    };
+
+    // save a new recipe at recipe index
+    async save(recipe) {
+        await this.client.index({
+            index: this.index,
+            type: 'recipe',
+            body: recipe
+        });
     };
 };
 

@@ -1,16 +1,12 @@
-const elasticsearch = require('elasticsearch')
+const recipeService = require('./service/recipeService');
 
-const config = require('./config');
-const database = require('./config/database');
-const Recipe = require('./model/recipe');
-
-let recipeObj = {
+let recipe = {
     name: 'test-recipe',
     application: 'test',
     active: true,
     elasticsearch: 'http://localhost:9200',
     kibana: "http://localhost:5601",
-    interval: 10,
+    interval: 1,
     search: {
         index: 'shakespeare',
         query: '"with love"',
@@ -25,19 +21,4 @@ let recipeObj = {
     }
 };
 
-if(config.store.type === "elasticsearch") {
-    let client = new elasticsearch.Client({
-        host: config.store.uri
-    });
-
-    client.index({
-        index: config.store.recipeIndex,
-        type: 'recipe',
-        body: recipeObj
-      });
-
-} else if (config.store.type === "mongo") {
-    database.connect(config.store);
-    var recipe = new Recipe(recipeObj);
-    recipe.save();
-}
+recipeService.save(recipe);

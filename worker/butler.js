@@ -60,13 +60,6 @@ class Butler {
 
         this.recipeService.findActive()
             .then(recipes => {
-                if(this.config.store.type === "mongo") {
-                    return recipes.map(recipe => recipe.toObject());
-                } else {
-                    return recipes;
-                }
-            })
-            .then(recipes => {
 
                 let toRemove = this.timers.filter(timer => !recipes.map(x => JSON.stringify(x)).includes(JSON.stringify(timer.recipe)));
                 let toAdd    = recipes.filter(recipe => !this.timers.map(x => JSON.stringify(x.recipe)).includes(JSON.stringify(recipe)));
@@ -99,7 +92,6 @@ class Butler {
 
         let client = new elasticsearch.Client({
             host: recipe.elasticsearch
-            //,log: 'trace'
         });
 
         client.search({
