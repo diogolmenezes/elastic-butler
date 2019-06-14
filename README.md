@@ -1,13 +1,13 @@
 # Elastic Butler
 
-Elastic butler were born at **Oi** telecomunication company as a **open source alternative** to [Elastic Stack Alerting tool](https://www.elastic.co/products/stack/alerting).
+Elastic Butler was formed at **Oi** telecomunication company as an **open source alternative** to [Elastic Stack Alerting tool](https://www.elastic.co/products/stack/alerting).
 
-With butler you get notified if your data has a pattern set by you.
+Whereas other services issue notifications based on pre-determined parameters, Elastic Butler allows the user to create their own. Users define the pattern they desire a notification for, known as a [recipes](#recipes), as well as *how* they are notified, known as [notification types](#creating-senders).
 
+Such examples include, but are not limited to:
 - Notify me by mail if there are more than 10 fail login attempts in the last 20 minutes
 - Notify me by if we sell more than 1000 iphones in the last day
 
-You are free to create your own [recipes](#recipes) and [notification types](#creating-senders).
 
 ## Get Started
 
