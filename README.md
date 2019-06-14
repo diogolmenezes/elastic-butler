@@ -11,12 +11,12 @@ You are free to create your own [recipes](#recipes) and [notification types](#cr
 
 ## Get Started
 
-Elastic butler will store the [recipes](#recipes) and the execution result at a Elastic Search index, so before start check the configuration file
- **config/env.json** and set up you store configurations.
+Elastic Butler will store the [recipes](#recipes) created, along with the execution result at the Elastic Search Index. Prior to launching Elastic Butler, check the configuration file
+ **config/env.json** to set up the desired configurations (i.e. - [recipes](#recipes)). 
 
-Create your [recipes](#recipes) than start butler.
+Once complete, launch Electric Butler.
 
-You can also use the [sandbox](#sandbox) to do your first test, it will provide to you a elastic search and kibana instances running on docker.
+**NOTE:** *The user can also use [sandbox](#sandbox) to perform the first test. [Sandbox](#sandbox) provides users with an elasticearch and Kibana instances running on the Docker platform.*
 
 ```bash
 npm start
