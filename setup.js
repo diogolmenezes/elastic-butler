@@ -15,7 +15,7 @@ let recipe = {
     },
     action: {
         type: 'gmail',
-        to: 'diogolmenezes@gmail.com',
+        to: 'yourmail@gmail.com',
         subject: '[#hits#] hits at [#application# #recipe#]',
         body: '<p>Your recipe results:</p> #detail#'
     }
