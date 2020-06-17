@@ -99,17 +99,18 @@ class Butler {
                 body: base._buildQuery(recipe)
             })
             .then((searchResult) => {
+                const total = searchResult.hits.total.value || searchResult.hits.total.value; 
 
-                let haveToFireAction = searchResult.hits.total > recipe.search.limit;
+                let haveToFireAction = total > recipe.search.limit;
 
                 if (haveToFireAction)
                     base._doAction(recipe, searchResult);
                 else {
                     // save the process result
-                    base.executionService.save(recipe, searchResult.hits.total, false).catch((err) => {
-                        console.log('err', err);
+                    base.executionService.save(recipe, total, false).catch((err) => {
+                        console.log('Error Make =>', err);
                     });
-                    console.log(`Butler => Found [${searchResult.hits.total}] hits. No actions will be fired for recipe [${recipe.application}] [${recipe.name}]`);
+                    console.log(`Butler => Found [${total}] hits. No actions will be fired for recipe [${recipe.application}] [${recipe.name}]`);
                 }
             });
     };
@@ -151,7 +152,8 @@ class Butler {
 
     // Get information about the execution
     _getDetail(recipe, searchResult) {
-        return `<p><strong>Hits:</strong> ${searchResult.hits.total}</p>
+        const total = searchResult.hits.total.value || searchResult.hits.total.value;
+        return `<p><strong>Hits:</strong> ${total}</p>
                 <p><strong>ElasticSearch:</strong><a href="${recipe.elasticsearch}">${recipe.elasticsearch}</a></p>
                 <p><strong>Kibana:</strong><a href="${recipe.kibana}">${recipe.kibana}</a></p>
                 <p><strong>Application:</strong> ${recipe.application}</p>
@@ -165,13 +167,14 @@ class Butler {
 
     // Do the action
     _doAction(recipe, searchResult) {
-        let base = this;
-        let sender = {};
+        let base    = this;
+        let sender  = {};
+        const total = searchResult.hits.total.value || searchResult.hits.total.value;
 
         // clone recipe object, because we will change it to add detail
         recipe = Object.assign({}, recipe);
 
-        console.log(`Butler => The recipe [${recipe.application}] [${recipe.name}] will be executed because needed [${recipe.search.limit}] hits and had [${searchResult.hits.total}] hits`);
+        console.log(`Butler => The recipe [${recipe.application}] [${recipe.name}] will be executed because needed [${recipe.search.limit}] hits and had [${total}] hits`);
 
         recipe.detail = this._getDetail(recipe, searchResult);
 
@@ -180,14 +183,14 @@ class Butler {
         sender.send(recipe, searchResult)
             .then((result) => {
                 console.log(`Butler => Action executed with success for recipe [${recipe.application}] [${recipe.name}]`);
-                base.executionService.save(recipe, searchResult.hits.total, true, result).catch((err) => {
-                    console.log('err', err);
+                base.executionService.save(recipe, total, true, result).catch((err) => {
+                    console.log('_doAction, send ', err);
                 });
             })
             .catch((error) => {
                 console.log(`Butler => Error executing the action for recipe [${recipe.application}] [${recipe.name}]`, error)
-                base.executionService.save(recipe, searchResult.hits.total, true, error.stack).catch((err) => {
-                    console.log('err', err);
+                base.executionService.save(recipe, total, true, error.stack).catch((err) => {
+                    console.log('_doAction, catch', err);
                 });
             });
     };
